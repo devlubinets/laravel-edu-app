@@ -2,7 +2,7 @@ version: '3'
 
 services:
     php:
-        container_name: laravel-php-container
+        container_name: laravel-php-edu-container
         build:
             context: docker/php
             dockerfile: dev/Dockerfile
@@ -15,10 +15,10 @@ services:
             - .:/app
             - ./docker/php:/etc/cron.d
         networks:
-            - net
+            - net-edu
 
     http:
-        container_name: laravel-http-container
+        container_name: laravel-http-edu-container
         build:
             context: docker/http
             dockerfile: Dockerfile
@@ -26,34 +26,24 @@ services:
             - ./docker/http/conf.d:/etc/nginx/conf.d
             - .:/app
         networks:
-            - net
+            - net-edu
 
     db:
-        container_name: laravel-db-container
+        container_name: laravel-db-edu-container
         image: mysql:latest
         restart: always
         volumes:
-            - db-data:/var/lib/mysql
+            - db-edu-data:/var/lib/mysql
         environment:
             MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
             MYSQL_DATABASE: ${DB_DATABASE}
             MYSQL_USER: ${DB_USERNAME}
             MYSQL_PASSWORD: ${DB_PASSWORD}
         networks:
-            - net
-
-#  laravel_redis:
-#    container_name: laravel-redis-container
-#    restart: always
-#    build:
-#      context: data/docker/redis
-#      args:
-#        HOST_UID: ${HOST_UID}
-#    volumes:
-#      - ./data/volumes/redis:/data
+            - net-edu
 
 volumes:
-    db-data:
+    db-edu-data:
 
 networks:
-    net:
+    net-edu:

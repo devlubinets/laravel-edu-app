@@ -16,4 +16,4 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-./docker/php/dev/log/
+/docker/php/dev/log
