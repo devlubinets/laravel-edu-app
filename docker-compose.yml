@@ -1,0 +1,59 @@
+version: '3'
+
+services:
+    php:
+        container_name: laravel-php-container
+        build:
+            context: docker/php
+            dockerfile: dev/Dockerfile
+        restart: always
+        env_file:
+            - .env
+        volumes:
+            - ./docker/php/dev/log:/var/www/log
+            - ./docker/php/dev/configuration:/usr/local/etc/php
+            - .:/app
+            - ./docker/php:/etc/cron.d
+        networks:
+            - net
+
+    http:
+        container_name: laravel-http-container
+        build:
+            context: docker/http
+            dockerfile: Dockerfile
+        volumes:
+            - ./docker/http/conf.d:/etc/nginx/conf.d
+            - .:/app
+        networks:
+            - net
+
+    db:
+        container_name: laravel-db-container
+        image: mysql:latest
+        restart: always
+        volumes:
+            - db-data:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+        networks:
+            - net
+
+#  laravel_redis:
+#    container_name: laravel-redis-container
+#    restart: always
+#    build:
+#      context: data/docker/redis
+#      args:
+#        HOST_UID: ${HOST_UID}
+#    volumes:
+#      - ./data/volumes/redis:/data
+
+volumes:
+    db-data:
+
+networks:
+    net:
